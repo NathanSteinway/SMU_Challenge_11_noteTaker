@@ -28,37 +28,6 @@ app.use(express.static('public'));
 app.use('/api', apiRoutes);
 app.use('/', htmlRoutes);
 
-//========================
-// Get and post requests.
-//========================
-
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/notes.html'));
-});
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/index/html'));
-});
-
-// Had to JSON.parse because db.json notes don't display properly for some reason?
-
-app.get('/notes', (req, res) => {
-    const data = fs.readFileSync('./db/db.json');
-    res.json(JSON.parse(data));
-});
-
-// using uuid here to assign each note with a randomized id
-
-app.post('/notes', (req, res) => {
-    const notes = JSON.parse(fs.readFileSync('./db/db.json'));
-    const newNote = req.body;
-    newNote.id = uuid.v4();
-    notes.push(newNote);
-    fs.writeFileSync('./db/db.json', JSON.stringify(notes));
-    res.json(notes);
-});
-
-
 app.listen(PORT, function() {
     console.log(`Listening on port ${PORT}`);
 });
